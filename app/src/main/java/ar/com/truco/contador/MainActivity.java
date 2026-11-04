@@ -37,7 +37,11 @@ public final class MainActivity extends Activity {
         if (goal != 15 && goal != 30) goal = 30;
         for (int i = 0; i < 2; i++) {
             scores[i] = Math.max(0, Math.min(goal, prefs.getInt("s"+i, 0)));
-            names[i] = prefs.getString("n"+i, i==0 ? "Nosotros" : "Ellos");
+            String storedName = prefs.getString("n"+i, i==0 ? "Nosotros" : "Ellos");
+            if (storedName == null) storedName = i==0 ? "Nosotros" : "Ellos";
+            storedName = storedName.trim();
+            names[i] = storedName.isEmpty() ? (i==0 ? "Nosotros" : "Ellos") :
+                    storedName.substring(0, Math.min(14, storedName.length()));
         }
         String saved = prefs.getString("history", "");
         for (String item : saved.split(";")) {
@@ -148,7 +152,16 @@ public final class MainActivity extends Activity {
         final int cream = Color.rgb(248,234,209), gold = Color.rgb(210,175,120);
         final int blue = Color.rgb(24,94,141), red = Color.rgb(158,44,34);
 
-        Board() { super(MainActivity.this); }
+        int systemTop = 0, systemBottom = 0;
+        Board() {
+            super(MainActivity.this);
+            setOnApplyWindowInsetsListener((v, insets) -> {
+                systemTop = insets.getSystemWindowInsetTop();
+                systemBottom = insets.getSystemWindowInsetBottom();
+                invalidate();
+                return insets;
+            });
+        }
 
         void rect(Canvas c,float x,float y,float w,float h,float r,int color) {
             p.setColor(color); p.setStyle(Paint.Style.FILL);
@@ -225,8 +238,9 @@ public final class MainActivity extends Activity {
 
         @Override protected void onDraw(Canvas c) {
             super.onDraw(c);
-            scale=Math.min(getWidth()/380f,getHeight()/780f);
-            offsetY=Math.max(0,(getHeight()-780*scale)/2);
+            float safeHeight = Math.max(1f, getHeight()-systemTop-systemBottom);
+            scale=Math.min(getWidth()/380f,safeHeight/780f);
+            offsetY=systemTop + Math.max(0,(safeHeight-780*scale)/2);
             offsetX=(getWidth()-380*scale)/2;
             c.drawColor(wood);
             c.save(); c.translate(offsetX,offsetY); c.scale(scale,scale);
