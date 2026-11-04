@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -144,6 +146,7 @@ public final class MainActivity extends Activity {
 
     private final class Board extends View {
         final Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        final Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.truco_logo);
         final List<Hit> hits = new ArrayList<>();
         boolean historyOpen = false;
         float scale, offsetY, offsetX;
@@ -247,7 +250,14 @@ public final class MainActivity extends Activity {
             hits.clear();
             rect(c,10,58,360,684,22,felt);
             stroke(c,10,58,360,684,22,Color.rgb(109,79,48),5);
-            text(c,"TRUCO",190,41,31,cream,true,true);
+            if (logo != null) {
+                p.setStyle(Paint.Style.FILL);
+                p.setColor(Color.WHITE);
+                p.setAlpha(255);
+                p.setFilterBitmap(true);
+                c.drawBitmap(logo, null, new RectF(120,5,161,46), p);
+            }
+            text(c,"TRUCO",224,40,29,cream,true,true);
             text(c,"PARTIDA A "+goal+" PUNTOS",190,95,13,gold,true,true);
             button(c,18,12,45,35,"≡",Color.rgb(99,66,41),()->settings());
             button(c,319,12,43,35,"⚙",Color.rgb(99,66,41),()->settings());

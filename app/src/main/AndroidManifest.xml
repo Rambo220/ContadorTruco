@@ -5,6 +5,8 @@
         android:fullBackupContent="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:label="Contador Truco"
+        android:icon="@drawable/truco_logo"
+        android:roundIcon="@drawable/truco_logo"
         android:theme="@android:style/Theme.Material.Light.NoActionBar"
         android:usesCleartextTraffic="false">
         <activity
