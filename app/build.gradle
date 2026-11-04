@@ -1,5 +1,10 @@
 plugins { id 'com.android.application' }
 
+// La firma de distribución se configura solo con secretos de GitHub Actions.
+// No se almacena ninguna contraseña ni clave privada en el repositorio.
+def signEnv = ['RELEASE_KEYSTORE_FILE', 'RELEASE_STORE_PASSWORD', 'RELEASE_KEY_ALIAS', 'RELEASE_KEY_PASSWORD']
+def canSignRelease = signEnv.every { name -> System.getenv(name) != null && !System.getenv(name).isEmpty() }
+
 android {
     namespace 'ar.com.truco.contador'
     compileSdk 35
@@ -8,14 +13,26 @@ android {
         applicationId 'ar.com.truco.contador'
         minSdk 23
         targetSdk 35
-        versionCode 3
-        versionName '2.1'
+        versionCode 4
+        versionName '2.2'
+    }
+
+    signingConfigs {
+        if (canSignRelease) {
+            release {
+                storeFile file(System.getenv('RELEASE_KEYSTORE_FILE'))
+                storePassword System.getenv('RELEASE_STORE_PASSWORD')
+                keyAlias System.getenv('RELEASE_KEY_ALIAS')
+                keyPassword System.getenv('RELEASE_KEY_PASSWORD')
+            }
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
+            if (canSignRelease) signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
