@@ -259,10 +259,8 @@ public final class MainActivity extends Activity {
             }
             text(c,"TRUCO",224,40,29,cream,true,true);
             text(c,"PARTIDA A "+goal+" PUNTOS",190,95,13,gold,true,true);
-            button(c,18,12,45,35,"≡",Color.rgb(99,66,41),()->settings());
             button(c,319,12,43,35,"⚙",Color.rgb(99,66,41),()->settings());
             team(c,0,17); team(c,1,193);
-            button(c,18,579,137,48,"Deshacer",Color.rgb(34,55,66),()->undo());
             button(c,170,579,38,48,"↶",Color.rgb(109,69,35),()->undo());
             button(c,224,579,138,48,"Nueva",Color.rgb(33,103,63),()->
                 new AlertDialog.Builder(MainActivity.this)
@@ -276,7 +274,6 @@ public final class MainActivity extends Activity {
             text(c,history.size()+" mov.",302,687,12,gold,false,true);
             text(c,"⌄",336,674,23,cream,true,true);
             hits.add(new Hit(26,644,328,57,()->{ historyOpen=true; invalidate(); }));
-            text(c,"Sin internet ni servicios de fondo",190,724,12,gold,false,true);
 
             if(historyOpen) {
                 rect(c,0,0,380,780,0,0xB9000000);
