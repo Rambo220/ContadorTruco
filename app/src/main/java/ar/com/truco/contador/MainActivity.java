@@ -173,7 +173,7 @@ public final class MainActivity extends Activity {
             rect(c,x,y+3,w,h,9,Color.rgb(31,21,17));
             rect(c,x,y,w,h,9,color);
             stroke(c,x+1,y+1,w-2,h-2,9,gold,1);
-            text(c,label,x+w/2,y+h*.67f,h*.46f,cream,true,true);
+            text(c,label,x+w/2,y+h*.67f, (label.startsWith("+") || label.equals("−1")) ? h*.55f : h*.46f,cream,true,true);
             hits.add(new Hit(x,y,w,h,action));
         }
         void five(Canvas c,float x,float y,float sz,int n,int active) {
@@ -205,22 +205,22 @@ public final class MainActivity extends Activity {
             rect(c,x+8,141,154,36,5,color);
             text(c,names[t],x+84,165,21,cream,true,true);
             hits.add(new Hit(x+8,141,154,36,()->rename(t)));
-            text(c,""+scores[t],x+85,266,82,ink,true,true);
-            text(c,"/"+goal,x+85,290,17,Color.rgb(100,76,53),true,true);
+            text(c,""+scores[t],x+85,255,68,ink,true,true);
+            text(c,"/"+goal,x+85,280,17,Color.rgb(100,76,53),true,true);
             int bad=Math.min(15,scores[t]);
             int good=goal==30?Math.max(0,scores[t]-15):0;
-            text(c,"BUENAS",x+12,319,14,ink,true,false);
-            text(c,good+"/15",x+158,319,13,ink,true,true);
-            group(c,x+9,327,152,good,color);
-            text(c,"MALAS",x+12,404,14,ink,true,false);
-            text(c,bad+"/15",x+158,404,13,ink,true,true);
-            group(c,x+9,413,152,bad,color);
+            text(c,"BUENAS",x+12,302,14,ink,true,false);
+            text(c,good+"/15",x+141,302,13,ink,true,true);
+            group(c,x+9,311,152,good,color);
+            text(c,"MALAS",x+12,382,14,ink,true,false);
+            text(c,bad+"/15",x+141,382,13,ink,true,true);
+            group(c,x+9,391,152,bad,color);
             float bx=x+8;
             for(int i=0;i<4;i++) {
                 int n=i+1;
-                button(c,bx+(i%2)*79,470+(i/2)*31,73,27,"+"+n,color,()->add(t,n));
+                button(c,bx+(i%2)*79,448+(i/2)*43,75,39,"+"+n,color,()->add(t,n));
             }
-            button(c,bx,533,152,33,"−1",color,()->add(t,-1));
+            button(c,bx,534,154,36,"−1",color,()->add(t,-1));
         }
 
         @Override protected void onDraw(Canvas c) {
