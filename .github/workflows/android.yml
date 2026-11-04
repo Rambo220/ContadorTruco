@@ -28,6 +28,21 @@ jobs:
           gradle-version: '8.9'
       - name: Compilar APK debug
         run: gradle --no-daemon :app:assembleDebug
+      - name: Comprobar permisos del APK (sin red)
+        shell: bash
+        run: |
+          AAPT="$ANDROID_HOME/build-tools/35.0.0/aapt"
+          APK="app/build/outputs/apk/debug/app-debug.apk"
+          test -f "$APK"
+          "$AAPT" dump permissions "$APK" | tee /tmp/contador-permissions.txt
+          if grep -Eq "uses-permission|permission:" /tmp/contador-permissions.txt; then
+            echo "::error::La aplicación declara un permiso Android no esperado."
+            exit 1
+          fi
+          if grep -Eq "android.permission.INTERNET|android.permission.ACCESS_NETWORK_STATE" /tmp/contador-permissions.txt; then
+            echo "::error::El APK pide acceso a red."
+            exit 1
+          fi
       - name: Publicar APK
         uses: actions/upload-artifact@v4
         with:
